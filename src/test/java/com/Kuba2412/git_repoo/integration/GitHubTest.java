@@ -42,7 +42,6 @@ public class GitHubTest {
     @Test
     public void testGetRepositoryDetails_Success() throws Exception {
         // Given
-        wireMockServer.start();
         GitHubRepo repo = new GitHubRepo();
         repo.setFullName("Kuba2412/MedicalClinic");
         repo.setDescription("Description");
@@ -65,13 +64,11 @@ public class GitHubTest {
         assertEquals(repo.getCloneUrl(), responseRepo.getCloneUrl());
         assertEquals(repo.getStars(), responseRepo.getStars());
         assertEquals(repo.getCreatedAt(), responseRepo.getCreatedAt());
-        wireMockServer.stop();
     }
 
     @Test
     public void testGetRepositoryDetails_ServiceUnavailable() throws Exception {
         // Given
-        wireMockServer.start();
         wireMockServer.stubFor(get(urlPathEqualTo("/repos/Kuba2412/AnyRepo"))
                 .willReturn(aResponse()
                         .withStatus(503)
@@ -83,6 +80,5 @@ public class GitHubTest {
             gitHubClient.getRepository("Kuba2412", "AnyRepo");
         });
         assertEquals(503, thrown.getMessage());
-        wireMockServer.stop();
     }
 }
